@@ -1,0 +1,14 @@
+.dashboard {
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.empty-state,
+.selection-hint {
+  margin-top: 1rem;
+}
