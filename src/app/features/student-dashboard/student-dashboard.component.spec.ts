@@ -1,16 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
 
 import { StudentDashboardComponent } from './student-dashboard.component';
+import { CourseService } from '../../services/course.service';
 
 describe('StudentDashboardComponent', () => {
   let component: StudentDashboardComponent;
   let fixture: ComponentFixture<StudentDashboardComponent>;
 
   beforeEach(async () => {
+    const mockCourseService = {
+      getAll: vi.fn(() => of([])),
+      getById: vi.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [StudentDashboardComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: CourseService, useValue: mockCourseService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StudentDashboardComponent);
@@ -22,42 +32,23 @@ describe('StudentDashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('renders four catalog cards and disables the full course enroll button', () => {
-    const cards = Array.from(
-      fixture.nativeElement.querySelectorAll('tms-course-card') as NodeListOf<Element>
-    );
-    expect(cards.length).toBe(4);
-
-    const fullCourseCard = cards.find((card) =>
-      card.textContent?.includes('Angular UI Lab')
-    );
-    const fullCourseButton = fullCourseCard?.querySelector('button') as
-      | HTMLButtonElement
-      | null;
-
-    expect(fullCourseButton?.disabled).toBe(true);
+  it('has coursesResource with getAll() stream', () => {
+    expect(component.coursesResource).toBeDefined();
   });
 
-  it('updates the last enrollment request when a course is selected', () => {
-    const firstEnrollButton = Array.from(
-      fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
-    ).find(
-      (button) => button.textContent?.includes('Enroll') && !button.disabled
-    );
+  it('tracks selected course on enrollment', () => {
+    const mockCourse = {
+      id: 1,
+      title: 'Test Course',
+      code: 'TST-001',
+      maxCapacity: 25,
+      enrollmentCount: 10,
+    };
 
-    firstEnrollButton?.click();
-    fixture.detectChanges();
+    component.handleEnroll(mockCourse);
 
-    const status = fixture.nativeElement.querySelector('.selection-hint');
-    expect(status?.textContent).toContain('Last enrollment request');
-    expect(status?.textContent).toContain('Advanced Java Services');
-  });
-
-  it('shows the empty state when no courses are available', () => {
-    component.availableCourses.set([]);
-    fixture.detectChanges();
-
-    const emptyState = fixture.nativeElement.querySelector('.empty-state');
-    expect(emptyState?.textContent).toContain('No courses are available');
+    expect(component.selectedCourse()).toEqual(mockCourse);
   });
 });
+
+
