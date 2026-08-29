@@ -3,13 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 export interface TmsUser {
+  id?: string;
+  email?: string;
   displayName: string;
   role: string;
 }
 
 export interface LoginRequest {
-  username: string;
+  email?: string;
+  username?: string;
   password: string;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 @Injectable({
@@ -19,16 +27,57 @@ export class AuthService {
   private http = inject(HttpClient);
 
   currentUser = signal<TmsUser | null>(null);
+  private readonly accessTokenSignal = signal<string | null>(null);
+  private readonly refreshTokenSignal = signal<string | null>(null);
+
+  readonly accessToken = this.accessTokenSignal.asReadonly();
+  readonly refreshToken = this.refreshTokenSignal.asReadonly();
 
   hasRole(role: string): boolean {
     const user = this.currentUser();
     return user?.role === role || user?.role === 'Admin';
   }
 
-  async login(credentials: LoginRequest): Promise<void> {
-    await firstValueFrom(this.http.post<void>('/api/v1/auth/login', credentials));
+  private decodeToken(token: string): TmsUser | null {
+    try {
+      const payload = token.split('.')[1];
+      const normalizedPayload = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const decoded = JSON.parse(atob(normalizedPayload));
 
-    const user = await firstValueFrom(this.http.get<TmsUser>('/api/v1/auth/me'));
+      const roles = Array.isArray(decoded.role) ? decoded.role : [decoded.role].filter(Boolean);
+      const role = roles[0] ?? 'User';
+      const displayName = decoded.FirstName ?? decoded.email ?? decoded.sub ?? 'User';
+
+      return {
+        id: decoded.sub,
+        email: decoded.email,
+        displayName,
+        role,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private setSession(response: AuthResponse): void {
+    this.accessTokenSignal.set(response.accessToken);
+    this.refreshTokenSignal.set(response.refreshToken);
+
+    const user = this.decodeToken(response.accessToken);
     this.currentUser.set(user);
+  }
+
+  logout(): void {
+    this.accessTokenSignal.set(null);
+    this.refreshTokenSignal.set(null);
+    this.currentUser.set(null);
+  }
+
+  async login(credentials: LoginRequest): Promise<void> {
+    const response = await firstValueFrom(
+      this.http.post<AuthResponse>('/api/auth/login', credentials),
+    );
+
+    this.setSession(response);
   }
 }
