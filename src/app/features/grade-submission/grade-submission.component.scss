@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  padding: 1.5rem;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.25);
+}
+
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
+.bg-slate-900 {
+  background: #0f172a;
+}
+
+.border-slate-800 {
+  border-color: #1e293b;
+}
+
+.text-slate-100 {
+  color: #f1f5f9;
+}
+
+.text-slate-400 {
+  color: #94a3b8;
+}
+
+.text-sky-400 {
+  color: #38bdf8;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.bg-slate-800 {
+  background: #1e293b;
+}
+
+.border-slate-700 {
+  border-color: #334155;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
