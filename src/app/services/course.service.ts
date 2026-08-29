@@ -1,26 +1,22 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators";
-import { Course } from "../models/course.model";
-
-export interface PagedResponse<T> {
-  items: T[];
-  totalCount: number;
-}
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { Course, PagedResponse } from '../models/course.model';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class CourseService {
   private http = inject(HttpClient);
-  private baseUrl = "http://localhost:5123/api/courses";
+  private readonly baseUrl = `${environment.apiUrl}/courses`;
 
   getAll(page = 1, pageSize = 50) {
     return this.http
       .get<PagedResponse<Course>>(this.baseUrl, {
         params: { page: page.toString(), pageSize: pageSize.toString() },
       })
-      .pipe(map((p) => p.items));
+      .pipe(map((response) => response.items));
   }
 
   getById(id: string) {
