@@ -33,6 +33,10 @@ export class AuthService {
   readonly accessToken = this.accessTokenSignal.asReadonly();
   readonly refreshToken = this.refreshTokenSignal.asReadonly();
 
+  getAccessToken(): string | null {
+    return this.accessTokenSignal();
+  }
+
   hasRole(role: string): boolean {
     const user = this.currentUser();
     return user?.role === role || user?.role === 'Admin';
@@ -44,13 +48,14 @@ export class AuthService {
       const normalizedPayload = payload.replace(/-/g, '+').replace(/_/g, '/');
       const decoded = JSON.parse(atob(normalizedPayload));
 
-      const roles = Array.isArray(decoded.role) ? decoded.role : [decoded.role].filter(Boolean);
-      const role = roles[0] ?? 'User';
-      const displayName = decoded.FirstName ?? decoded.email ?? decoded.sub ?? 'User';
+      const roleClaim = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      const roles = Array.isArray(roleClaim) ? roleClaim : [roleClaim].filter(Boolean);
+      const role = roles[0] ?? decoded.role ?? 'Student';
+      const displayName = decoded.name ?? decoded.FirstName ?? decoded.email ?? decoded.sub ?? 'User';
 
       return {
         id: decoded.sub,
-        email: decoded.email,
+        email: decoded.email ?? decoded.sub ?? '',
         displayName,
         role,
       };
