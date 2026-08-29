@@ -11,6 +11,7 @@ FormArray,
   standalone: true,
   imports: [ReactiveFormsModule], // Required without this, Angular does not recognize form directives
   templateUrl: "./enrollment-form.html",
+  styleUrl: "./enrollment-form.scss",
 })
 
 export class EnrollmentFormComponent {

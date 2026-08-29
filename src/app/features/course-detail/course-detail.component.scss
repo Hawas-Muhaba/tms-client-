@@ -1,0 +1,31 @@
+.detail-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+
+  h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #f0f0f0;
+    color: #0066cc;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #e0e0e0;
+      text-decoration: underline;
+    }
+  }
+}

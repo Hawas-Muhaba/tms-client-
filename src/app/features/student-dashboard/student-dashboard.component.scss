@@ -12,3 +12,29 @@
 .selection-hint {
   margin-top: 1rem;
 }
+
+.selection-hint {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #0066cc;
+  background-color: #f0f7ff;
+  border-radius: 4px;
+  color: #333;
+  font-weight: 500;
+}
+
+.spinner {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+.error {
+  padding: 1rem;
+  background-color: #ffebee;
+  border-left: 4px solid #d32f2f;
+  color: #c62828;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
